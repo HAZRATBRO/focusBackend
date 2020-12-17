@@ -12,17 +12,18 @@ const Course = require('./models/course')
 const User   = require('./models/users')
 const Test   = require('./models/test')
 const TestResponse = require('./models/testResponse')
-const quiz = JSON.parse(fs.readFileSync('./focusQuiz.json','utf-8'))
+const quiz = JSON.parse(fs.readFileSync('./test.json','utf-8'))
  
 var markingSchema = {
+    notAttempted:0,
     SingleChoice:{
-        fullMarks:4,
-        negativeMarks:0
+        fullMarks:3,
+        negativeMarks:-1
 
     },
     MultipleChoice:{
         fullMarks:4,
-        negativeMarks:-2 ,
+        negativeMarks:-1 ,
         partialMarks:[1 , 2 , 3]
 
     },
@@ -35,6 +36,14 @@ var markingSchema = {
         fullMarks:4,
         negativeMarks:0
 
+    },
+    ParagraphType:{
+        fullMarks:3,
+        negativeMarks:0
+    },
+    MatrixType:{
+        fullMarks:8,
+        negativeMarks:0
     }
 }   
 
@@ -91,7 +100,8 @@ router.get('/getFTSEQuiz' , auth , function(req , res){
 })
 //later change to return a list of completed quizzes
 router.post('/completionStatus' , auth , function(req , res){
-    const query = {"userResponses.testName":req.params.quizName , userName:req.user}
+    console.log(req.body.quizName)
+    const query = {"userResponses.testName":req.body.quizName , userName:req.user}
     const project = {_id : 0 , "userResponses.isComplete":1}
     dbo.collection('users').find(query).project(project).toArray(
         function(err , result){
@@ -102,9 +112,10 @@ router.post('/completionStatus' , auth , function(req , res){
             }
             else{
                 // console.log(JSON.stringify(result))
-                 
-                res.json(result) 
-                 
+               if(result.length > 0)  
+                  res.json(result[0].userResponses[0]) 
+               else
+                  res.json({isComplete:false})     
             }
         }
     )
@@ -156,21 +167,18 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
     router.post('/uploadUserQuiz', auth,function(req , res){
      
      
-        const {testName , sections , scheduledDate , remainingTime , isComplete } =  req.body 
-        console.log(testName)
-        var quiz = new TestResponse(testName , sections , scheduledDate , remainingTime , isComplete)
+        const {testName , sections , validBefore  , isComplete ,testDuration , totalMarks} =  req.body 
+        console.log(JSON.stringify(sections))
+        var quizData = new TestResponse(testName , sections , validBefore , req.body.remainingTime , isComplete , testDuration , totalMarks)
         console.log("Start")
-        compileFinalResult(quiz.testName , quiz) //change to the var quiz
+        compileFinalResult(quizData.testName , quizData) //change to the var quiz
         console.log("Waited")
     
         const query =  {  
             "userResponses.testName": testName
             ,"userName" :req.user
        }
-        if(req.params.courseName === ""){
-            res.status(400).json({"error":"Not a valid input"})
-        }
-        
+         
         dbo.collection('users').find(query).toArray(
             function(err , result){
                 if(err){
@@ -184,22 +192,22 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
                     // console.log(JSON.stringify(result))
                     if(result.length>0){
                         console.log("Trick")
-                        console.log(JSON.stringify(quiz))
+                        console.log(JSON.stringify(quizData))
                         res.status(500).json({"error":"Response Already Recorded"})
                     } 
                     else{
                          
-                    const query = { userName : req.user} 
-                    console.log("Am printed before")
+                    const updateQuery = { userName : req.user} 
+                    console.log("Am printed before " + " : " + req.user)
                     const update = { 
                         
-                        "$push": {"userResponses":quiz} 
+                        "$push": {"userResponses":quizData} 
                         } 
 
-                    dbo.collection("users").update(query ,update , function(err , result){
+                    dbo.collection("users").updateOne(updateQuery ,update , function(err , result){
                             if(err){
                                 res.status(500).json({
-                                    'error':'Error fetching DataBase'
+                                    'error':'Error pushing to DataBase'
                                 })
                             }
                             else{
@@ -258,26 +266,37 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
                     }
                 
           
-       
-     
+        function isEqual(a , b) 
+        { 
+             
+            // if length is not equal 
+            if(a.length!=b.length) 
+                return "False"; 
+            else
+            { 
+            // comapring each element of array 
+            for(var i=0;i<a.length;i++){
+                if(a[i]!=b[i]) 
+                    return "False"; 
+            } 
+                 
+                return "True"; 
+            } 
+        } 
+
     
         function assignMarks( i , j , quizData , quiz){
-            console.log(i + " " + j)
-            console.log(JSON.stringify(quizData.sections[i]))
-            console.log(JSON.stringify(quiz.sections[i]))
-            console.log(quizData.sections[i].questions[j].type + " " + quiz.sections[i].questions[j].type)
-            console.log(quizData.sections[i].questions[j].response + " " + quiz.sections[i].questions[j].correctAnswer)
+            
             quiz.sections[i].questions[j].correctAnswer+=''
             if((quizData.sections[i].questions[j].type === "MultipleChoice")){
-                quiz.sections[i].questions[j].correctAnswer = quiz.sections[i].questions[j].correctAnswer.split(',')
-                console.log(quiz.sections[i].questions[j].correctAnswer.length)
-                if(JSON.stringify(quizData.sections[i].questions[j].response.checkBox) === JSON.stringify(quiz.sections[i].questions[j].correctAnswer)){
+                quiz.sections[i].questions[j].correctAnswer =  quiz.sections[i].questions[j].correctAnswer.split(',')
+                if(isEqual(quizData.sections[i].questions[j].response.checkBox , quiz.sections[i].questions[j].correctAnswer)){
                     quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.fullMarks
                     return
                 }
                 //partial marking logic
                 else if(quizData.sections[i].questions[j].response.checkBox.length === 0 ){
-                    quizData.sections[i].questions[j].marksAwarded = 0
+                    quizData.sections[i].questions[j].marksAwarded = markingSchema.notAttempted
                     return
                 }
                 else if(quizData.sections[i].questions[j].response.checkBox.length === 1){
@@ -324,40 +343,22 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
                 }
            }
     
-           else if(quizData.sections[i].questions[j].type === "SingleChoice" ){
-               if(quizData.sections[i].questions[j].response.input === quiz.sections[i].questions[j].correctAnswer){
-                quizData.sections[i].questions[j].marksAwarded = markingSchema.SingleChoice.fullMarks
+           
+           else{
+            if(quizData.sections[i].questions[j].response.input === quiz.sections[i].questions[j].correctAnswer){
+                quizData.sections[i].questions[j].marksAwarded = markingSchema[quizData.sections[i].questions[j].type].fullMarks
                 return  
              }
-               else{
-                quizData.sections[i].questions[j].marksAwarded = markingSchema.SingleChoice.negativeMarks
+               else if(quizData.sections[i].questions[j].response.input === ''){
+                quizData.sections[i].questions[j].marksAwarded = markingSchema.notAttempted
                 return
-            }
-           }
-           else if(quizData.sections[i].questions[j].type === "NumericalType" ){
-            if(quizData.sections[i].questions[j].response.input === quiz.sections[i].questions[j].correctAnswer){
-             quizData.sections[i].questions[j].marksAwarded = markingSchema.NumericalType.fullMarks
-            return
-            }
-            else{
-                
-             quizData.sections[i].questions[j].marksAwarded = markingSchema.NumericalType.negativeMarks
-            return
-            }
-        }
-        else if(quizData.sections[i].questions[j].type === "FillInTheBlanks" ){
-            if(quizData.sections[i].questions[j].response.input === quiz.sections[i].questions[j].correctAnswer){
-             quizData.sections[i].questions[j].marksAwarded = markingSchema.FillInTheBlanks.fullMarks
-            return
-            }
-            else{
-             quizData.sections[i].questions[j].marksAwarded = markingSchema.FillInTheBlanks.negativeMarks
-            return
+            }else{
+                quizData.sections[i].questions[j].marksAwarded = markingSchema[quizData.sections[i].questions[j].type].negativeMarks
             }
            }
         }
 
-        router.post("/signup" , 
+router.post("/signup" , 
     [
         check("phone" , "Enter a valid Phone Number").isMobilePhone("any"),
          check("email", "Please enter a valid email").isEmail(),
@@ -394,7 +395,7 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
                     // console.log("result " +  result.sections.length)
                     // console.log(JSON.stringify(result))
                    if(result.length > 0){
-                    res.status(400).json({
+                    res.status(500).json({
                         errors:"User Already Exists"
                     })
                    }

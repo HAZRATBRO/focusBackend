@@ -1,0 +1,231 @@
+{
+    "testName": "Focus Chemistry DPP",
+    "sections": [
+      {
+        "sectionName": "Section1",
+        "sectionMarks":49,
+        "questions": [
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q1.PNG",
+            "correctAnswer": "D",
+            "questionIndex": 1
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q2.PNG",
+            "correctAnswer": "A",
+            "questionIndex": 2
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q3.PNG",
+            "correctAnswer": "B",
+            "questionIndex": 3
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q4.PNG",
+            "correctAnswer": "D",
+            "questionIndex": 4
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q5.PNG",
+            "correctAnswer": "A",
+            "questionIndex": 5
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q6.PNG",
+            "correctAnswer": "B",
+            "questionIndex": 6
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q7.PNG",
+            "correctAnswer": "D",
+            "questionIndex": 7
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q8.PNG",
+            "correctAnswer": "B",
+            "questionIndex": 8
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q9.PNG",
+            "correctAnswer": [
+              "D"
+            ],
+            "questionIndex": 9
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "MultipleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q10.PNG",
+            "correctAnswer": [
+              "B",
+              "C"
+            ],
+            "questionIndex": 10
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "MultipleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q11.PNG",
+            "correctAnswer": [
+              "A",
+              "C",
+              "D"
+            ],
+            "questionIndex": 11
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "MultipleChoice",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q12.PNG",
+            "correctAnswer": [
+              "A",
+              "B",
+              "C"
+            ],
+            "questionIndex": 12
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "ParagraphType",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q13.PNG",
+            "correctAnswer": "C",
+            "questionIndex": 13 
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "ParagraphType",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q14.PNG",
+            "correctAnswer": "B",
+            "questionIndex": 14
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "ParagraphType",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q15.PNG",
+            "correctAnswer": "A",
+            "questionIndex": 15
+          }
+
+        ]
+      },
+      {
+        "sectionName": "Section2",
+        "sectionMarks":12,
+        "questions": [
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section2/q1.jpg",
+            "correctAnswer": 1,
+            "questionIndex": 1
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section2/q2.PNG",
+            "correctAnswer": 8,
+            "questionIndex": 2
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section2/q3.PNG",
+            "correctAnswer": 4,
+            "questionIndex": 3
+          }
+        ]
+      },
+      {
+        "sectionName": "Section3",
+        "sectionMarks":8,
+        "questions": [
+          {
+              
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "MatrixType",
+            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section3/q1.PNG",
+            "correctAnswer": "A",
+            "questionIndex": 1
+          }
+        ]
+      }
+    ],
+    "vailidBefore": "2020-12-17T00:00:00.000Z",
+    "testDuration": 45,
+    "totalMarks": 69
+  }
