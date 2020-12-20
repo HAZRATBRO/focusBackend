@@ -1,5 +1,9 @@
+
 var mongo = require('mongodb').MongoClient
-var url = "mongodb://localhost:27017/"
+require('dotenv').config();
+
+var url =process.env.DATABASE_URL? process.env.DATABASE_URL:'mongodb://localhost:27017'
+// var url = 'mongodb://localhost:27017'
 var dbo
 const express = require("express")
 const {check , validationResult} = require("express-validator")
@@ -272,36 +276,44 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
             // if length is not equal 
             if(a.length!=b.length) 
                 return "False"; 
-            else
-            { 
+             
+            let b1 = a[0].charCodeAt(0) 
+            let b2 = b[0].charCodeAt(0)                
             // comapring each element of array 
-            for(var i=0;i<a.length;i++){
-                if(a[i]!=b[i]) 
-                    return "False"; 
-            } 
-                 
-                return "True"; 
-            } 
+            for(let i = 0 ; i < a.length ; i++){
+                b1^=a[i].charCodeAt(0) 
+            }
+            for(let i = 0 ; i < b.length ; i++){
+                b2^=b[i].charCodeAt(0) 
+            }  
+            
+            let res = b1^b2
+
+            return res === 0
         } 
 
     
         function assignMarks( i , j , quizData , quiz){
             
             quiz.sections[i].questions[j].correctAnswer+=''
+            console.log(quiz.sections[i].questions[j].correctAnswer)
             if((quizData.sections[i].questions[j].type === "MultipleChoice")){
                 quiz.sections[i].questions[j].correctAnswer =  quiz.sections[i].questions[j].correctAnswer.split(',')
-                if(isEqual(quizData.sections[i].questions[j].response.checkBox , quiz.sections[i].questions[j].correctAnswer)){
+                console.log(quiz.sections[i].questions[j].correctAnswer)
+                if(isEqual(quizData.sections[i].questions[j].response.checkBox , quiz.sections[i].questions[j].correctAnswer) === true){
                     quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.fullMarks
                     return
                 }
                 //partial marking logic
                 else if(quizData.sections[i].questions[j].response.checkBox.length === 0 ){
+                    console.log("Zero Marks")
                     quizData.sections[i].questions[j].marksAwarded = markingSchema.notAttempted
                     return
                 }
                 else if(quizData.sections[i].questions[j].response.checkBox.length === 1){
                     if(quiz.sections[i].questions[j].correctAnswer.includes(quizData.sections[i].questions[j].response.checkBox[0])){
                         if(quiz.sections[i].questions[j].correctAnswer.length >= 2){
+                            console.log("Partial mark 1")
                             quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.partialMarks[0]
                             return
                         }
@@ -309,13 +321,15 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
                     }
                     //wrong answer
                     else{
+                        console.log("Wrong answer marked")
                         quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.negativeMarks
                         return
                     }
                 }
                 else if(quizData.sections[i].questions[j].response.checkBox.length === 2){
                     let result = quizData.sections[i].questions[j].response.checkBox.every( e  => quiz.sections[i].questions[j].correctAnswer.includes(e));
-                    if(result){
+                    console.log(result)
+                    if(result == true){
                         if(quiz.sections[i].questions[j].correctAnswer.length >= 3){
                             quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.partialMarks[1]
                             return
@@ -329,7 +343,7 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
                 }
                 else if(quizData.sections[i].questions[j].response.checkBox.length === 3){
                     let result = quizData.sections[i].questions[j].response.checkBox.every( e  => quiz.sections[i].questions[j].correctAnswer.includes(e));
-                    if(result){
+                    if(result == true){
                         if(quiz.sections[i].questions[j].correctAnswer.length > 3){
                             quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.partialMarks[2]
                             return
@@ -435,13 +449,11 @@ router.post("/signup" ,
                         jwt.sign(
                             payload ,
                             userKey , {
-                                expiresIn:10000
+                                expiresIn:"1d"
                             } ,
                             (err , token)=>{
                                 if(err) throw err;
-                                res.status(200).json({
-                                    token
-                                })
+                                getUser(username , token , res)
                             } 
                             )    
                         }
@@ -556,4 +568,9 @@ router.post(
     
 }
  
+router.get('/healthcheck'  , function(req , res){
+    res.json({responseData:"Hello From Backend"})
+})
+
+
 module.exports = router

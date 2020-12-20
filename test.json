@@ -92,9 +92,7 @@
             },
             "type": "SingleChoice",
             "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q9.PNG",
-            "correctAnswer": [
-              "D"
-            ],
+            "correctAnswer":  "D",
             "questionIndex": 9
           },
           {
@@ -104,10 +102,7 @@
             },
             "type": "MultipleChoice",
             "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q10.PNG",
-            "correctAnswer": [
-              "B",
-              "C"
-            ],
+            "correctAnswer": "B,C",
             "questionIndex": 10
           },
           {
@@ -117,11 +112,7 @@
             },
             "type": "MultipleChoice",
             "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q11.PNG",
-            "correctAnswer": [
-              "A",
-              "C",
-              "D"
-            ],
+            "correctAnswer": "A,C,D",
             "questionIndex": 11
           },
           {
@@ -131,11 +122,7 @@
             },
             "type": "MultipleChoice",
             "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section1/q12.PNG",
-            "correctAnswer": [
-              "A",
-              "B",
-              "C"
-            ],
+            "correctAnswer":  "A,B,C",
             "questionIndex": 12
           },
           {
