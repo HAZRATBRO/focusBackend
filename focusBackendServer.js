@@ -16,8 +16,8 @@ const Course = require('./models/course')
 const User   = require('./models/users')
 const Test   = require('./models/test')
 const TestResponse = require('./models/testResponse')
-const quiz = JSON.parse(fs.readFileSync('./test.json','utf-8'))
- 
+const quiz = JSON.parse(fs.readFileSync('./maths_dpp.json','utf-8'))
+const sample_quiz = JSON.parse(fs.readFileSync('./test.json', 'utf-8')) 
 var markingSchema = {
     notAttempted:0,
     SingleChoice:{
@@ -33,7 +33,7 @@ var markingSchema = {
     },
     NumericalType:{
         fullMarks:4,
-        negativeMarks:0
+        negativeMarks:-1
 
     },
     FillInTheBlanks:{
@@ -92,6 +92,18 @@ mongo.connect(url , function(err , db){
  })
 })
 
+router.get('/getSampleQuiz' , auth , function(req , res){
+    let response = JSON.parse(JSON.stringify(sample_quiz))
+    
+    response.sections.forEach(section => {
+        section.questions.forEach(question=>{
+            delete question.correctAnswer
+        })
+    });
+
+    res.send(JSON.stringify(response))
+})
+
 router.get('/getFTSEQuiz' , auth , function(req , res){
     let response = JSON.parse(JSON.stringify(quiz))
     
@@ -100,8 +112,11 @@ router.get('/getFTSEQuiz' , auth , function(req , res){
             delete question.correctAnswer
         })
     });
+    console.log(response.testName)
      res.send(JSON.stringify(response))
 })
+
+
 //later change to return a list of completed quizzes
 router.post('/completionStatus' , auth , function(req , res){
     console.log(req.body.quizName)
@@ -126,8 +141,8 @@ router.post('/completionStatus' , auth , function(req , res){
 })
  
 
-router.get('/getQuiz/:quizName',auth, function(req , res){
-    const query = {testName:req.params.quizName}
+router.get('/getQuiz',auth, function(req , res){
+    const query = {testName : req.query.testName}
     const projection = { _id: 0 , 'sections.questions.correctAnswer':0};    
     dbo.collection('quizzes').find(query).project(projection).toArray(
         function(err , result){
@@ -138,7 +153,7 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
             }
             else{
                 // console.log(JSON.stringify(result))
-                res.json(result)
+                res.json(result[0])
             }
         }
     )
@@ -146,29 +161,58 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
          
     })
 
-    router.post('/getClassStatistics' , auth , function(req , res){
-        let testName = req.body.testName
-        const query ={ userName: { $ne: req.user }}
-        const proj = {user, userResponses: { $elemMatch: { testName: testName } }}
-        const project = {userResponses:1 , _id:0}
-        dbo.collection('users').find(query).project(project).toArray(
-            function(err , result){
-                if(err){
-                    res.status(500).json({
-                        "error":"Error getting userData"
-                    })
-                }
-                else{
-                    // console.log(JSON.stringify(result))
-                     
-                    res.json(result) 
-                     
-                }
+    
+router.get('/getDashboardQuiz' , auth ,async function(req , res){
+    const userQuery = {userName:req.query.userName}
+    const projection = {_id:0 ,email:0 , userName:0 , password:0 , coursesEnrolled:0 , phone:0 , avatar:0,'userResponses.sections':0}
+    const quizProjection = {_id:0,sections:0}
+    let responseData 
+    await dbo.collection('users').find(userQuery).project(projection).toArray(
+        function(err , result){
+            if(err){
+                res.status(500).json({
+                    'error':'Error fetching DataBase'
+                })
             }
-        )
-    })
+            else{
+                // console.log(JSON.stringify(result))
+                console.log(result[0].userResponses)
+                responseData = result[0].userResponses
+            }
+        }
+    )
+    await dbo.collection('quizzes').find().project(quizProjection).toArray(
+        function(err , result){
+            if(err){
+                res.status(500).json({
+                    'error':'Error fetching DataBase'
+                })
+            }
+            else{
+                console.log((result))
+                result.forEach(data =>{
+                   let responseFlag = true 
+                   for(let i = 0 ; i < responseData.length ; i++){
+                       if(responseData[i].testName === data.testName){
+                           responseFlag = false
+                           break;
+                       }
+                   }
+                   if(responseFlag === true){
+                     data.isComplete = false  
+                     responseData.push(data)
+                   }
+                })
+                console.log(responseData)
+                res.json(responseData)
+            }
+        }
+    )
+    
+    
+})
 
-    router.post('/uploadUserQuiz', auth,function(req , res){
+router.post('/uploadUserQuiz', auth,function(req , res){
      
      
         const {testName , sections , validBefore  , isComplete ,testDuration , totalMarks} =  req.body 
@@ -258,15 +302,17 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
             const projection = {_id:0 , testDuration:0 ,'sections.questions.questionFile':0 , 'sections.questions.optionFile':0}
              
                         // console.log("result " +  result.sections.length)
-                        // console.log(JSON.stringify(result))
+                        // console.log(JSON.stringify(result))\
+                        let totalScore = 0
                        let quizClone = JSON.parse(JSON.stringify(quiz))
                        for(let i = 0 ; i < quizData.sections.length ; i++){
                            for(let j = 0 ; j < quizData.sections[i].questions.length ; j++){
                              
                             assignMarks(i , j ,quizData , quizClone)
+                            totalScore +=quizData.sections[i].questions[j].marksAwarded
                            }
                        }     
-                         
+                        quizData.totalScore = totalScore 
                     }
                 
           
@@ -291,8 +337,42 @@ router.get('/getQuiz/:quizName',auth, function(req , res){
 
             return res === 0
         } 
+        
+        function assignAbsolute(i , j , quizData , quiz){
+            quiz.sections[i].questions[j].correctAnswer+=''
+            if((quizData.sections[i].questions[j].type === "MultipleChoice")){
+                quiz.sections[i].questions[j].correctAnswer =  quiz.sections[i].questions[j].correctAnswer.split(',')
+                
+                if(isEqual(quizData.sections[i].questions[j].response.checkBox , quiz.sections[i].questions[j].correctAnswer) === true){
+                    console.log("Full Marks")
+                    quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.fullMarks
+                    return
+                }
+                
+                else if(quizData.sections[i].questions[j].response.checkBox.length === 0 ){
+                    console.log("Zero Marks")
+                    quizData.sections[i].questions[j].marksAwarded = markingSchema.notAttempted
+                    return
+                }
+                else{
+                    console.log("Negative Marks")
+                    quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.negativeMarks
 
-    
+                }
+            }
+            else{
+                if(quizData.sections[i].questions[j].response.input === quiz.sections[i].questions[j].correctAnswer){
+                    quizData.sections[i].questions[j].marksAwarded = markingSchema[quizData.sections[i].questions[j].type].fullMarks
+                    return  
+                 }
+                   else if(quizData.sections[i].questions[j].response.input === ''){
+                    quizData.sections[i].questions[j].marksAwarded = markingSchema.notAttempted
+                    return
+                }else{
+                    quizData.sections[i].questions[j].marksAwarded = markingSchema[quizData.sections[i].questions[j].type].negativeMarks
+                } 
+            }
+        }
         function assignMarks( i , j , quizData , quiz){
             
             quiz.sections[i].questions[j].correctAnswer+=''

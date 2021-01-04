@@ -2,7 +2,7 @@
     "testName": "Focus Chemistry DPP",
     "sections": [
       {
-        "sectionName": "Section1",
+        "sectionName": "Section 1",
         "sectionMarks":49,
         "questions": [
           {
@@ -157,62 +157,10 @@
           }
 
         ]
-      },
-      {
-        "sectionName": "Section2",
-        "sectionMarks":12,
-        "questions": [
-          {
-            "response": {
-              "input": "",
-              "checkBox": []
-            },
-            "type": "NumericalType",
-            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section2/q1.jpg",
-            "correctAnswer": 1,
-            "questionIndex": 1
-          },
-          {
-            "response": {
-              "input": "",
-              "checkBox": []
-            },
-            "type": "NumericalType",
-            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section2/q2.PNG",
-            "correctAnswer": 8,
-            "questionIndex": 2
-          },
-          {
-            "response": {
-              "input": "",
-              "checkBox": []
-            },
-            "type": "NumericalType",
-            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section2/q3.PNG",
-            "correctAnswer": 4,
-            "questionIndex": 3
-          }
-        ]
-      },
-      {
-        "sectionName": "Section3",
-        "sectionMarks":8,
-        "questions": [
-          {
-              
-            "response": {
-              "input": "",
-              "checkBox": []
-            },
-            "type": "MatrixType",
-            "optionFile": "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/Section3/q1.PNG",
-            "correctAnswer": "A",
-            "questionIndex": 1
-          }
-        ]
       }
+       
     ],
-    "vailidBefore": "2020-12-17T00:00:00.000Z",
+    "validBefore": "2020-12-30T00:00:00.000Z",
     "testDuration": 45,
-    "totalMarks": 69
+    "totalMarks": 49
   }

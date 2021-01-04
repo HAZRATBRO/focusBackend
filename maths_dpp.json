@@ -1,0 +1,227 @@
+{
+    "testName": "Maths Internal",
+    "sections": [
+      {
+        "sectionName": "Section_1",
+        "sectionMarks":29,
+        "questions": [
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q1.PNG",
+            "correctAnswer": "C",
+            "questionIndex": 1
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q2.PNG",
+            "correctAnswer": "D",
+            "questionIndex": 2
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q3.PNG",
+            "correctAnswer": "C",
+            "questionIndex": 3
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q4.PNG",
+            "correctAnswer": "C",
+            "questionIndex": 4
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q5.PNG",
+            "correctAnswer": "A",
+            "questionIndex": 5
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q6.PNG",
+            "correctAnswer": "B",
+            "questionIndex": 6
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "SingleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q7.PNG",
+            "correctAnswer": "C",
+            "questionIndex": 7
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "MultipleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q8.PNG",
+            "correctAnswer": "A,C,D",
+            "questionIndex": 8
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "MultipleChoice",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_1/q9.PNG",
+            "correctAnswer": "A,B,C",
+            "questionIndex": 9
+          }
+        ]
+      },
+      {
+        "sectionName": "Section_2",
+        "sectionMarks":20,
+        "questions": [
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_2/q1.PNG",
+            "correctAnswer": 7,
+            "questionIndex": 1
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_2/q2.PNG",
+            "correctAnswer": 3,
+            "questionIndex": 2
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_2/q3.PNG",
+            "correctAnswer": 8,
+            "questionIndex": 3
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_2/q4.PNG",
+            "correctAnswer": 101,
+            "questionIndex": 4
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_2/q5.PNG",
+            "correctAnswer": 6,
+            "questionIndex": 5
+          }
+        ]
+      },
+      {
+        "sectionName": "Section_3",
+        "sectionMarks":24,
+        "questions": [
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_3/q1.PNG",
+            "correctAnswer": 1,
+            "questionIndex": 1
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_3/q2.PNG",
+            "correctAnswer": 8,
+            "questionIndex": 2
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_3/q3.PNG",
+            "correctAnswer": 3,
+            "questionIndex": 3
+          },{
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_3/q4.PNG",
+            "correctAnswer": 6,
+            "questionIndex": 4
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_3/q5.PNG",
+            "correctAnswer": 4,
+            "questionIndex": 5
+          },
+          {
+            "response": {
+              "input": "",
+              "checkBox": []
+            },
+            "type": "NumericalType",
+            "optionFile": "https://focusedutech.s3.ap-south-1.amazonaws.com/Section_3/q6.PNG",
+            "correctAnswer": 5,
+            "questionIndex": 6
+          }
+
+          
+        ]
+      }
+    ],
+    "validBefore": "2020-12-30T00:00:00.000Z",
+    "testDuration": 60,
+    "totalMarks": 73
+  }

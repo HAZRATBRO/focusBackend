@@ -1016,7 +1016,7 @@
         "sectionMarks": 60
       }
     ],
-    "vailidBefore": "2020-12-20T00:00:00.000Z",
+    "validBefore": "2020-12-30T00:00:00.000Z",
     "testDuration": 180,
     "totalMarks": 300
   }

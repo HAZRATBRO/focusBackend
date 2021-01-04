@@ -1,6 +1,6 @@
-// const fs = require('fs');
-// const AWS = require('aws-sdk');
-// let testFolder = 'C:\\Users\\yadav\\OneDrive\\Desktop\\focus_quiz1'
+const fs = require('fs');
+const AWS = require('aws-sdk');
+let testFolder = 'C:\\Users\\yadav\\OneDrive\\Desktop\\focus_quiz1'
 // const s3 = new AWS.S3({
 //     //1st) This will have to chnaged
 //     //2nd) Will have to move it to the config file
@@ -8,25 +8,25 @@
 //     secretAccessKey: "NZy962Xs68I84NhgNUxTTjbbihyNsHfk3J+RZBhr"
 // });
 
-// //File to be picked
-// const fileName = 'imageToUpload.jfif';
+//File to be picked
+const fileName = 'imageToUpload.jfif';
 
-// const uploadFile = () => {
-//   fs.readFile(fileName, (err, data) => {
-//      if (err) throw err;
-//      const params = {
-//          //Bucket name will have to be changed
-//          Bucket: 'testbucketimageupload', 
-//          //Name to be used for saving the file 
-//          Key: 'Name.jfif', 
-//          Body: JSON.stringify(data, null, 2)
-//      };
-//      s3.upload(params, function(s3Err, data) {
-//          if (s3Err) throw s3Err
-//          console.log(`File uploaded successfully at ${data.Location}`)
-//      });
-//   });
-// };
+const uploadFile = () => {
+  fs.readFile(fileName, (err, data) => {
+     if (err) throw err;
+     const params = {
+         //Bucket name will have to be changed
+         Bucket: 'testbucketimageupload', 
+         //Name to be used for saving the file 
+         Key: 'Name.jfif', 
+         Body: JSON.stringify(data, null, 2)
+     };
+     s3.upload(params, function(s3Err, data) {
+         if (s3Err) throw s3Err
+         console.log(`File uploaded successfully at ${data.Location}`)
+     });
+  });
+};
 const Test   = require('./models/test')
 
 const answerkey = [
@@ -131,27 +131,27 @@ const answerkey = [
     "B",
     "C"
   ]
-const sec1 =  ["D","A" , "B" , "D" , "A" , "B" , "D" , "B",['D'],['B','C'],['A','C','D'],['A','B','C'],'C','B','A']
-const sec2 = [1 , 8 , 4]
-const sec3 = ['A']
+const sec1 =  ["C" , "D" , "C" , "C" , "C" , "A" , "B" , "C" , "A,C,D" , "A,B,C"]
+const sec2 = [7 , 3 , 8 , 101 , 6]
+const sec3 = [1 , 8 , 3 , 6 , 4 , 5]
      
 function createTestData(){
-    const cloud_base_url = "https://focuschemistrydpp.s3.ap-south-1.amazonaws.com/"
-    let quizData = new Test("FIExam" , [] , new Date("2020-12-17") , 45 , 69)
+    const cloud_base_url = "https://focusedutech.s3.ap-south-1.amazonaws.com/"
+    let quizData = new Test("Maths Internal" , [] , new Date("2020-12-22") , 60 , 77)
      
-    const sections = ["Section1" , "Section2" , "Section3" ]
+    const sections = ["Section_1" , "Section_2" , "Section_3" ]
     sections.forEach((section)=>{
         let sectionData = {}
         sectionData.sectionName = section
         sectionData.questions = []
-        if(section=='Section1'){
-        for(let i = 0; i < 12 ; i++){
+        if(section=='Section_1'){
+        for(let i = 0; i < 9 ; i++){
             let questionData = {}
             questionData.response = {
                 input:'',
                 checkBox:[]
             }
-            if(i <= 8){
+            if(i < 8){
                 questionData.type="SingleChoice"
 
             }
@@ -165,15 +165,15 @@ function createTestData(){
         }
          
     }
-    else if(section == 'Section2'){
-        for(let i = 0; i < 3 ; i++){
+    else if(section == 'Section_2'){
+        for(let i = 0; i < 5 ; i++){
             let questionData = {}
             questionData.response = {
                 input:'',
                 checkBox:[]
             }
             
-            questionData.type="SingleChoice"
+            questionData.type="NumericalType"
             questionData.optionFile = cloud_base_url+section+"/q"+(i+1)+".PNG"
             questionData.correctAnswer = sec2[i]
             questionData.questionIndex = i+1
@@ -187,7 +187,7 @@ function createTestData(){
             checkBox:[]
         }
         
-        questionData.type="SingleChoice"
+        questionData.type="NumericalType"
         questionData.optionFile = cloud_base_url+section+"/q"+(1)+".PNG"
         questionData.correctAnswer = sec3[0]
         questionData.questionIndex = 1
@@ -273,7 +273,43 @@ function createTestData(){
     //     quizData.sections.push(sectionData)
     // })
     console.log(JSON.stringify(quizData))
-    console.log()
+    
 }
 
-createTestData()
+function fileUploadService(file , fileName){
+    fs.readFile('test.json' , function(err , data){
+    
+    console.log(data)
+    let access_key = 'AKIAJFRL3OCUMDBARK2A';
+    let private_key = 'hDr/9iC+LhLEDRHzlpSfTgZg4eIvSF0vxsvFJ1u8';
+
+    const contentType = file.type;
+    const bucket = new AWS.S3(
+      {
+        accessKeyId:access_key,
+        secretAccessKey:private_key,
+        region:'ap-south-1'
+      }
+    ) ;
+    const params = {
+      Bucket : 'focusquizzes',
+      Key : fileName,
+      Body : data ,
+      ACL : 'public-read',
+      ContentType:contentType
+    }
+
+    bucket.upload(params , function(err , data){
+        if(err){
+          console.log('ERROR: ' , JSON.stringify(err));
+          return {}
+        }
+        console.log('File Uploaded. ' , data )
+        return data
+    })
+   })
+    
+  }
+
+
+  fileUploadService({},'test/testData.json')

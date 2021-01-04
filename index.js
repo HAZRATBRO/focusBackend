@@ -1,6 +1,7 @@
 let express = require('express')
 let app = express();
 let apiRoutes = require('./focusBackendServer')
+let adminRoutes = require('./focusAdmin')
 let bodyParser = require('body-parser')  
 let cors = require('cors')
 
@@ -19,6 +20,11 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors())
  
+app.use(express.static(process.cwd()+"/coaching-pwa"));
 
+app.get('/', (req,res) => {
+    res.sendFile(process.cwd()+"/coaching-pwa/index.html")
+  });
 
 app.use('/focus' , apiRoutes) 
+app.use('/focusAdmin',adminRoutes)
