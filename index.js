@@ -5,7 +5,7 @@ let adminRoutes = require('./focusAdmin')
 let bodyParser = require('body-parser')  
 let cors = require('cors')
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 
 app.listen(port , function(){
     console.log("Started Node backend on " + port)

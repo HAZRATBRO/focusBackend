@@ -2,7 +2,7 @@
 var mongo = require('mongodb').MongoClient
 require('dotenv').config();
 
-var url =process.env.MONGODB_URI? process.env.MONGODB_URI :'mongodb://localhost:27017'
+var url ='mongodb+srv://focusUser:jUNY9KGSb3Uo61gQ@focusbackend.jmsmm.mongodb.net/<dbname>?retryWrites=true&w=majority'
 // var url = 'mongodb://localhost:27017'
 var dbo
 const express = require("express")
