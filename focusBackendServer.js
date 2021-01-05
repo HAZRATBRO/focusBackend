@@ -4,7 +4,7 @@ require('dotenv').config();
 
 var url =process.env.DATABASE_URL 
 // var url ='mongodb+srv://focusUser:jUNY9KGSb3Uo61gQ@focusbackend.jmsmm.mongodb.net/<dbname>?retryWrites=true&w=majority'
-var url = 'mongodb://localhost:27017'
+// var url = 'mongodb://localhost:27017'
 var dbo
 const express = require("express")
 const {check , validationResult} = require("express-validator")
