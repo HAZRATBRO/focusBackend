@@ -5,7 +5,7 @@ let adminRoutes = require('./focusAdmin')
 let bodyParser = require('body-parser')  
 let cors = require('cors')
 var history = require('connect-history-api-fallback')
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 var compression = require('compression')
 var helmet = require('helmet')
 
