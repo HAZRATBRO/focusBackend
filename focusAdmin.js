@@ -46,9 +46,9 @@ router.get('/getAllTests' , admin , function(req , res){
 })
 
 router.get('/getSingleTest' , admin , function(req, res){
-    const query = {testName : req.params.testName}
-
-    dbo.collection("quizzes").find(query).toArray(
+    const query = {testName : req.query.testName}
+    const projection = {_id:0}
+    dbo.collection("quizzes").find(query).project(projection).toArray(
         function(err, result){
             if(err){
                 res.status(500).json({
