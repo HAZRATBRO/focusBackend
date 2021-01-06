@@ -183,6 +183,13 @@ router.post('/adminLogin' , async function(req , res){
 
 router.post('/uploadTest',admin ,function(req, res){
     let quizData = req.body
+    let quizName = req.query.quizName;
+    const query = {testName : quizName};
+    const updateVal = {$set : quizData}
+    console.log(quizName)
+    console.log(quizData)
+    if(quizName === "new"){
+
     dbo.collection("quizzes").insertOne(quizData , {upsert:true} , function(err ,result){
         if(err){
             res.status(500).json({
@@ -196,6 +203,21 @@ router.post('/uploadTest',admin ,function(req, res){
             "success":"successFull"
         })
     })
+}
+  else{
+      
+      dbo.collection("quizzes").updateOne(query , updateVal , function(err , db){
+        if(err) res.status(500).json({'error':'DB Problem'})
+
+        else{
+            res.status(200).json({
+                "status":"success"
+            })
+        }
+      })
+  }
+
+
 })    
 
 module.exports = router
