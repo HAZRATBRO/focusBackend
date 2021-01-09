@@ -187,7 +187,7 @@ router.post('/uploadTest',admin ,function(req, res){
     const query = {testName : quizName};
     const updateVal = {$set : quizData}
     console.log(quizName)
-    console.log(quizData)
+    console.log(JSON.stringify(quizData))
     if(quizName === "new"){
 
     dbo.collection("quizzes").insertOne(quizData , {upsert:true} , function(err ,result){
@@ -205,7 +205,7 @@ router.post('/uploadTest',admin ,function(req, res){
     })
 }
   else{
-      
+      console.log("Updating Quiz ...")
       dbo.collection("quizzes").updateOne(query , updateVal , function(err , db){
         if(err) res.status(500).json({'error':'DB Problem'})
 

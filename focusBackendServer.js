@@ -17,7 +17,7 @@ const Course = require('./models/course')
 const User   = require('./models/users')
 const Test   = require('./models/test')
 const TestResponse = require('./models/testResponse')
-const quiz = JSON.parse(fs.readFileSync('./maths_dpp.json','utf-8'))
+const quiz = JSON.parse(fs.readFileSync('./focusQuiz.json','utf-8'))
 const sample_quiz = JSON.parse(fs.readFileSync('./test.json', 'utf-8')) 
 var markingSchema = {
     notAttempted:0,
@@ -213,15 +213,22 @@ router.get('/getDashboardQuiz' , auth ,async function(req , res){
     
 })
 
-router.post('/uploadUserQuiz', auth,function(req , res){
+
+
+
+
+router.post('/uploadUserQuiz', auth, async function(req , res){
      
      
         const {testName , sections , validBefore  , isComplete ,testDuration , totalMarks} =  req.body 
-        console.log(JSON.stringify(sections))
+         
         var quizData = new TestResponse(testName , sections , validBefore , req.body.remainingTime , isComplete , testDuration , totalMarks)
-        console.log("Start")
-        compileFinalResult(quizData.testName , quizData) //change to the var quiz
-        console.log("Waited")
+        
+         
+        
+        
+       await compileFinalResult(quizData.testName , quizData) //change to the var quiz
+         
     
         const query =  {  
             "userResponses.testName": testName
@@ -269,6 +276,27 @@ router.post('/uploadUserQuiz', auth,function(req , res){
                 }
             }
         )})
+        
+      var compileFinalResult = async function(testName , quizData) {
+             
+            
+                       const result = await dbo.collection("quizzes").find( {testName : testName}).toArray()
+                         // console.log("result " +  result.sections.length)
+                        // console.log(JSON.stringify(result))\
+                       let totalScore = 0
+                       
+
+                       console.log("Printing Query Result...")
+                       console.log(result) 
+                       for(let i = 0 ; i < quizData.sections.length ; i++){
+                           for(let j = 0 ; j < quizData.sections[i].questions.length ; j++){
+                             
+                            await assignAbsolute(i , j ,quizData , result[0])
+                            totalScore +=quizData.sections[i].questions[j].marksAwarded
+                           }
+                       }     
+                        quizData.totalScore = totalScore 
+        }
 
         router.post('/getQuizResponse', auth , function(req , res){
             console.log("in")
@@ -286,6 +314,7 @@ router.post('/uploadUserQuiz', auth,function(req , res){
                         // console.log(JSON.stringify(result))
                          
                          if(result.length>0){
+                                console.log(result)
                                 res.json(result[0].userResponses)
                             }
                             else{
@@ -297,24 +326,7 @@ router.post('/uploadUserQuiz', auth,function(req , res){
             )
         })
 
-        function compileFinalResult(testName , quizData) {
-            console.log(testName + ' Saving...') 
-            const query = {testName : testName}
-            const projection = {_id:0 , testDuration:0 ,'sections.questions.questionFile':0 , 'sections.questions.optionFile':0}
-             
-                        // console.log("result " +  result.sections.length)
-                        // console.log(JSON.stringify(result))\
-                        let totalScore = 0
-                       let quizClone = JSON.parse(JSON.stringify(quiz))
-                       for(let i = 0 ; i < quizData.sections.length ; i++){
-                           for(let j = 0 ; j < quizData.sections[i].questions.length ; j++){
-                             
-                            assignMarks(i , j ,quizData , quizClone)
-                            totalScore +=quizData.sections[i].questions[j].marksAwarded
-                           }
-                       }     
-                        quizData.totalScore = totalScore 
-                    }
+       
                 
           
         function isEqual(a , b) 
@@ -340,39 +352,44 @@ router.post('/uploadUserQuiz', auth,function(req , res){
         } 
         
         function assignAbsolute(i , j , quizData , quiz){
+            
             quiz.sections[i].questions[j].correctAnswer+=''
             if((quizData.sections[i].questions[j].type === "MultipleChoice")){
                 quiz.sections[i].questions[j].correctAnswer =  quiz.sections[i].questions[j].correctAnswer.split(',')
                 
                 if(isEqual(quizData.sections[i].questions[j].response.checkBox , quiz.sections[i].questions[j].correctAnswer) === true){
                     console.log("Full Marks")
-                    quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.fullMarks
+                    quizData.sections[i].questions[j].marksAwarded = parseInt(quiz.markingScheme.MultipleChoice.fullMarks)
                     return
                 }
                 
                 else if(quizData.sections[i].questions[j].response.checkBox.length === 0 ){
                     console.log("Zero Marks")
-                    quizData.sections[i].questions[j].marksAwarded = markingSchema.notAttempted
+                    quizData.sections[i].questions[j].marksAwarded =parseInt( quiz.markingScheme.notAttempted)
                     return
                 }
                 else{
                     console.log("Negative Marks")
-                    quizData.sections[i].questions[j].marksAwarded = markingSchema.MultipleChoice.negativeMarks
+                    quizData.sections[i].questions[j].marksAwarded = parseInt(quiz.markingScheme.MultipleChoice.negativeMarks)
 
                 }
             }
             else{
                 if(quizData.sections[i].questions[j].response.input === quiz.sections[i].questions[j].correctAnswer){
-                    quizData.sections[i].questions[j].marksAwarded = markingSchema[quizData.sections[i].questions[j].type].fullMarks
+                    console.log("Correct Answer")
+                    quizData.sections[i].questions[j].marksAwarded = parseInt(quiz.markingScheme[quizData.sections[i].questions[j].type].fullMarks)
                     return  
                  }
                    else if(quizData.sections[i].questions[j].response.input === ''){
-                    quizData.sections[i].questions[j].marksAwarded = markingSchema.notAttempted
+                    console.log("Zero Marks")
+                    quizData.sections[i].questions[j].marksAwarded = parseInt(quiz.markingScheme.notAttempted)
                     return
                 }else{
-                    quizData.sections[i].questions[j].marksAwarded = markingSchema[quizData.sections[i].questions[j].type].negativeMarks
+                    console.log("Negative Marks")
+                    quizData.sections[i].questions[j].marksAwarded = parseInt(quiz.markingScheme[quizData.sections[i].questions[j].type].negativeMarks)
                 } 
             }
+            console.log(i , j , quizData.sections[i].questions[j].marksAwarded )
         }
         function assignMarks( i , j , quizData , quiz){
             

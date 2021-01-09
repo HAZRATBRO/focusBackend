@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({
 
 //save quiz endpoints
 app.use(compression())
-app.use(helmet())
+ 
 app.use(history())
 app.use(bodyParser.json());
 app.use(cors())
